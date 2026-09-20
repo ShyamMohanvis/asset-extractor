@@ -2,22 +2,22 @@ FROM mcr.microsoft.com/playwright:v1.49.0-jammy
 
 WORKDIR /app
 
-# Copy package configurations
-COPY server/package*.json ./server/
-COPY client/package*.json ./client/
-
-# Install dependencies (ensure devDependencies are installed for build)
-RUN cd server && npm install
-RUN cd client && npm install --include=dev
-
-# Copy source code
+# Copy all source files
 COPY . .
 
+# Remove any existing node_modules (just in case they were copied from Windows)
+RUN rm -rf node_modules client/node_modules server/node_modules
+
 # Build frontend
-RUN cd client && npm run build
+WORKDIR /app/client
+RUN npm install
+RUN npm run build
+
+# Setup server
+WORKDIR /app/server
+RUN npm install
 
 # Start server
-WORKDIR /app/server
 ENV NODE_ENV=production
 EXPOSE 3001
 
