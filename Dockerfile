@@ -6,9 +6,9 @@ WORKDIR /app
 COPY server/package*.json ./server/
 COPY client/package*.json ./client/
 
-# Install dependencies
+# Install dependencies (ensure devDependencies are installed for build)
 RUN cd server && npm install
-RUN cd client && npm install
+RUN cd client && npm install --include=dev
 
 # Copy source code
 COPY . .
