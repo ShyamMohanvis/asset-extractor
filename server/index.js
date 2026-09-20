@@ -57,5 +57,13 @@ app.get('/api/download/:id', (req, res) => {
     res.download(job.zipPath, `game-assets-${req.params.id}.zip`);
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
+
+// Serve React App
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
